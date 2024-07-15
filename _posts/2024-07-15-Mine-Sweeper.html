@@ -7,6 +7,24 @@ title: MineSweeper
 on computers that I would use often to play when there is downtime. Here is a simple one
 similar to what I would write in the military to celebrate the website launch. </p>
 
+
 <canvas id="canvas" width="400" height="400"></canvas>
 <script src="{{ base.url | prepend: site.url }}/scripts/minesweeper/minesweeper.js"> </script>
+
+<p> For those of you who might need a refresher: <br>
+The goal of the game is to reveal all tiles that don't contain the mines.<br>
+<br>
+You can left click to open tiles you think is safe. <br>
+The numbers tell you how many mines are in a 3x3 square around the number. <br>
+So, if the number says 1, there is only 1 mine in a 3x3 square. <br>
+<br>
+If you think there is a mine in a square, right click. It will put a flag down. <br>
+You can right click a flag to remove the flag. <br>
+Flag makes it so that you can't left click that square, to prevent you from accidentally
+clicking it. <br>
+<br>
+You can double click an open tile to click a 3x3 square around the number. <br>
+If you have all the mines around that tile flagged, use this feature to click less.
+
+</p>
 

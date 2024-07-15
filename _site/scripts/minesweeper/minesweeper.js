@@ -99,6 +99,19 @@ class Game {
         }
     }
 
+    doubleClick(y, x) {
+        if (this.#gameState != "running") {
+            return;
+        }
+        if (this.#revealedBoard[y][x] == false) {
+            return;
+        }
+        var surrounding = this.#getSurroundingTiles(y, x);
+        for (let j = 0; j < surrounding.length; j++) {
+            this.click(surrounding[j][0], surrounding[j][1]);
+        }
+    }
+
     flag(y, x) {
         if (this.#gameState != "running") {
             return;
@@ -124,7 +137,9 @@ class Game {
             }
         } else if (this.#gameState == "lose") {
             if (this.#answerBoard[y][x] == "mine") {
-                if (this.#revealedBoard[y][x] == false) {
+                if (this.#revealedBoard[y][x] == "flag") {
+                    return "flag";
+                } else if (this.#revealedBoard[y][x] == false) {
                     return "mine";
                 } else {
                     return "losemine";
@@ -259,13 +274,25 @@ function rightClickHandler(e, game) {
     }
     return false;
 }
+function doubleClickHandler(e, game) {
+    var y = Math.floor(e.offsetY / squareSize);
+    var x = Math.floor(e.offsetX / squareSize);
+    console.log(y, x);
+    game.doubleClick(y, x);
+    drawBoard(game);
+    if (game.isWin()) {
+        writeWin();
+    }
+}
 //<
 
 //>main
 var gameInstance = new Game(height, width);
-canvas.addEventListener('click', function(event) {clickHandler(event, gameInstance)});
-canvas.addEventListener('contextmenu', function(event) {rightClickHandler(event,
+canvas.addEventListener("click", function(event) {clickHandler(event, gameInstance)});
+canvas.addEventListener("contextmenu", function(event) {rightClickHandler(event,
 gameInstance)}, false);
+canvas.addEventListener("dblclick", function(event) {doubleClickHandler(event,
+gameInstance)});
 
 drawBoard(gameInstance);
 //<main
