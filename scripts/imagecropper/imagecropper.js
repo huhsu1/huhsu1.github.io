@@ -24,6 +24,8 @@ const BOX_LOCATION_UPPER_RIGHT_CORNER = 7;
 const BOX_LOCATION_BOTTOM_LEFT_CORNER = 8;
 const BOX_LOCATION_BOTTOM_RIGHT_CORNER = 9;
 
+var STARTED = false;
+
 var cropBoxData = {
     left:5,
     right:100,
@@ -88,8 +90,9 @@ var modal = document.getElementById("modal");
 var container = document.getElementById("container");
 
 var download = document.getElementById("download");
-var button = document.getElementById("crop");
+var crop = document.getElementById("crop");
 var link = document.createElement("a");
+var cancel = document.getElementById("cancel");
 link.download = "cropped.png";
 //<init
 
@@ -125,32 +128,38 @@ window.onresize = function() {
 }
 
 function addEventListeners() {
-    // image cropper events for computer
-    window.addEventListener("mousemove", onMouseMove, false);
+    if (!STARTED) {
+        // image cropper events for computer
+        window.addEventListener("mousemove", onMouseMove, false);
 
-    canvas.addEventListener("mousedown", onMouseDown, false);
-    window.addEventListener("mouseup", onMouseUp, false);
+        canvas.addEventListener("mousedown", onMouseDown, false);
+        window.addEventListener("mouseup", onMouseUp, false);
 
-    canvas.addEventListener("mouseover", onMouseOver, false);
-    canvas.addEventListener("mouseout", onMouseOut, false);
+        canvas.addEventListener("mouseover", onMouseOver, false);
+        canvas.addEventListener("mouseout", onMouseOut, false);
 
-    // image cropper events for phone
-    window.addEventListener("touchstart", onTouchStart, false);
-    window.addEventListener("touchend", onTouchEnd, false);
-    window.addEventListener("touchmove", onTouchMove, false);
+        // image cropper events for phone
+        window.addEventListener("touchstart", onTouchStart, false);
+        window.addEventListener("touchend", onTouchEnd, false);
+        window.addEventListener("touchmove", onTouchMove, false);
 
-    // overlay events
-    button.addEventListener("click", openOverlay);
+        // overlay events
+        crop.addEventListener("click", openOverlay);
 
-    modal.addEventListener("click", function(e) {
-        if (e.target != modal && e.target != container) {
-            return;
-        }
-        modal.classList.add("hidden");
-    });
-    download.addEventListener("click", function(e) {
-        link.click();
-    });
+        modal.addEventListener("click", function(e) {
+            if (e.target != modal && e.target != container) {
+                return;
+            }
+            modal.classList.add("hidden");
+        });
+        download.addEventListener("click", function(e) {
+            link.click();
+        });
+        cancel.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+        STARTED = true;
+    }
 }
 //<Event Listeners
 
@@ -396,37 +405,12 @@ function drawPreview() {
     previewCtx.drawImage(canvas, cropBoxData.left + BOX_LINE_WIDTH, cropBoxData.up +
     BOX_LINE_WIDTH, preview.width, preview.height,
     0, 0, preview.width, preview.height);
+    var widthvh = Math.round(preview.width / preview.height * 100);
+    var heightvw = Math.round(preview.height / preview.width * 100);
+    preview.style.width = `min(100%, ${widthvh}%)`;
+    preview.style.height = `min(100%, ${heightvw}%)`;
 }
 //<Render
-
-
-
-
-/*
-Implement drag and drop later!
-["dragenter dragstart dragend dragleave dragover drag drop"].forEach((item) => {
-    canvas.addEventListener(item, function(e) { e.preventDefault() }, false);
-});
-
-canvas.addEventListener("ondrop", function(event) { dropHandler(event); }, false);
-
-function dropHandler(e) {
-    // code heavily inspired by:
-    // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
-    console.log("File dropped");
-
-    e.preventDefault();
-
-    if (e.dataTransfer.files) {
-        var file = e.dataTransfer.files[0];
-        if (file.type.match('image.*')) {
-            var file = item.getAsFile();
-            console.log(`Got image ${file.name}`);
-        }
-    }
-    return false;
-}
-*/
 
 
 function fitToContainer(canvas) {

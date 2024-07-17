@@ -25,44 +25,66 @@ button {
         border-color: #0a58ca;
     }
 }
-#preview {
-    clear: both;
-    float: right;
-    margin-bottom: 10px;
-}
-#download {
-    clear: both;
-    float: right;
+#cancel {
+    background-color: transparent;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #0d6efd;
+    border-color: #0d6efd;
 }
 #canvas {
     touch-action: none;
 }
 .modal {
-  background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: table;
+    background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
 }
 
 .modal.hidden {
-  display: none;
+    display: none;
 }
 
 .modal .container {
- display: table-cell;
- text-align: center;
- vertical-align: middle;
- width: 200px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    max-width: 80vw;
+    max-height: 80vh;
 }
 
 .modal .body {
-  display: inline-block;
-  background-color: white;
-  border: 1px solid black; 
-  padding: 10px;
+    display: block;
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80vw;
+}
+.modal .body #preview {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.modal .body #buttonblock {
+    margin-top: 10px;
+    display: table;
+    width: 100%;
+    text-align: right;
+}
+.modal .body #download {
+    display: table-cell;
+    margin-right: 10px;
+}
+.modal .body #cancel {
+    display: table-cell;
 }
 </style>
 <p> Simple Image Cropper </p>
@@ -77,10 +99,12 @@ https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canv
 <div id="modal" class="modal hidden">
     <div id="container" class="container">
         <div class="body">
-            <p>Click outside this box to close.</p>
-            <p>Click download to download cropped image</p>
+            <h3>Preview</h3>
             <canvas id="preview" width=400 height=400 style="border: 1px solid black"></canvas>
-            <button id="download">Download</button>
+            <div id="buttonblock">
+                <button id="download">Download</button>
+                <button id="cancel">Cancel</button>
+            </div>
         </div>
     </div>
 </div>

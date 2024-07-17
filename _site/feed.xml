@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-07-16T19:16:35-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">huhsu1</title><subtitle>Welcome to SungWan&apos;s website. I&apos;ve uploaded some projects so you can see easier.</subtitle><entry><title type="html">ImageCropper</title><link href="http://localhost:4000/2024/07/16/Image-Cropper.html" rel="alternate" type="text/html" title="ImageCropper" /><published>2024-07-16T00:00:00-07:00</published><updated>2024-07-16T00:00:00-07:00</updated><id>http://localhost:4000/2024/07/16/Image-Cropper</id><content type="html" xml:base="http://localhost:4000/2024/07/16/Image-Cropper.html"><![CDATA[<style>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-07-17T13:01:14-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">huhsu1</title><subtitle>Welcome to SungWan&apos;s website. I&apos;ve uploaded some projects so you can see easier.</subtitle><entry><title type="html">ImageCropper</title><link href="http://localhost:4000/2024/07/16/Image-Cropper.html" rel="alternate" type="text/html" title="ImageCropper" /><published>2024-07-16T00:00:00-07:00</published><updated>2024-07-16T00:00:00-07:00</updated><id>http://localhost:4000/2024/07/16/Image-Cropper</id><content type="html" xml:base="http://localhost:4000/2024/07/16/Image-Cropper.html"><![CDATA[<style>
 button {
     cursor: pointer;
     outline: 0;
@@ -20,44 +20,66 @@ button {
         border-color: #0a58ca;
     }
 }
-#preview {
-    clear: both;
-    float: right;
-    margin-bottom: 10px;
-}
-#download {
-    clear: both;
-    float: right;
+#cancel {
+    background-color: transparent;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #0d6efd;
+    border-color: #0d6efd;
 }
 #canvas {
     touch-action: none;
 }
 .modal {
-  background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: table;
+    background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
 }
 
 .modal.hidden {
-  display: none;
+    display: none;
 }
 
 .modal .container {
- display: table-cell;
- text-align: center;
- vertical-align: middle;
- width: 200px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    max-width: 80vw;
+    max-height: 80vh;
 }
 
 .modal .body {
-  display: inline-block;
-  background-color: white;
-  border: 1px solid black; 
-  padding: 10px;
+    display: block;
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80vw;
+}
+.modal .body #preview {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.modal .body #buttonblock {
+    margin-top: 10px;
+    display: table;
+    width: 100%;
+    text-align: right;
+}
+.modal .body #download {
+    display: table-cell;
+    margin-right: 10px;
+}
+.modal .body #cancel {
+    display: table-cell;
 }
 </style>
 <p> Simple Image Cropper </p>
@@ -72,17 +94,19 @@ https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canv
 <div id="modal" class="modal hidden">
     <div id="container" class="container">
         <div class="body">
-            <p>Click outside this box to close.</p>
-            <p>Click download to download cropped image</p>
+            <h3>Preview</h3>
             <canvas id="preview" width=400 height=400 style="border: 1px solid black"></canvas>
-            <button id="download">Download</button>
+            <div id="buttonblock">
+                <button id="download">Download</button>
+                <button id="cancel">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
 
 <canvas id="canvas" width=1600 height=1600 style="border: 1px solid black"></canvas>
 <button id="crop">crop</button>
-<script src="http://localhost:4000/scripts/imagecropper/imagecropper.js"> </script>]]></content><author><name></name></author><summary type="html"><![CDATA[button { cursor: pointer; outline: 0; color: #fff; background-color: #0d6efd; border-color: #0d6efd; display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; border: 1px solid transparent; padding: 6px 12px; font-size: 16px; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; :hover { color: #fff; background-color: #0b5ed7; border-color: #0a58ca; } } #preview { clear: both; float: right; margin-bottom: 10px; } #download { clear: both; float: right; } #canvas { touch-action: none; } .modal { background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */ position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: table; }]]></summary></entry><entry><title type="html">MineSweeper</title><link href="http://localhost:4000/2024/07/15/Mine-Sweeper.html" rel="alternate" type="text/html" title="MineSweeper" /><published>2024-07-15T00:00:00-07:00</published><updated>2024-07-15T00:00:00-07:00</updated><id>http://localhost:4000/2024/07/15/Mine-Sweeper</id><content type="html" xml:base="http://localhost:4000/2024/07/15/Mine-Sweeper.html"><![CDATA[<p>Since I didn't have internet access during my time in the military, I often wrote minesweeper
+<script src="http://localhost:4000/scripts/imagecropper/imagecropper.js"> </script>]]></content><author><name></name></author><summary type="html"><![CDATA[button { cursor: pointer; outline: 0; color: #fff; background-color: #0d6efd; border-color: #0d6efd; display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; border: 1px solid transparent; padding: 6px 12px; font-size: 16px; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; :hover { color: #fff; background-color: #0b5ed7; border-color: #0a58ca; } } #cancel { background-color: transparent; font-size: 1rem; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; color: #0d6efd; border-color: #0d6efd; } #canvas { touch-action: none; } .modal { background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */ position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: table; }]]></summary></entry><entry><title type="html">MineSweeper</title><link href="http://localhost:4000/2024/07/15/Mine-Sweeper.html" rel="alternate" type="text/html" title="MineSweeper" /><published>2024-07-15T00:00:00-07:00</published><updated>2024-07-15T00:00:00-07:00</updated><id>http://localhost:4000/2024/07/15/Mine-Sweeper</id><content type="html" xml:base="http://localhost:4000/2024/07/15/Mine-Sweeper.html"><![CDATA[<p>Since I didn't have internet access during my time in the military, I often wrote minesweeper
 on computers that I would use often to play when there is downtime. Here is a simple one
 similar to what I would write in the military to celebrate the website launch. </p>
 
