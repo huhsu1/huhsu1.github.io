@@ -123,7 +123,7 @@ window.onresize = function() {
 }
 
 function addEventListeners() {
-    // image cropper events
+    // image cropper events for computer
     window.addEventListener("mousemove", onMouseMove, false);
 
     canvas.addEventListener("mousedown", onMouseDown, false);
@@ -131,6 +131,10 @@ function addEventListeners() {
 
     canvas.addEventListener("mouseover", onMouseOver, false);
     canvas.addEventListener("mouseout", onMouseOut, false);
+
+    // image cropper events for phone
+    window.addEventListener("touchstart", onTouchStart, false);
+    window.addEventListener("touchend", onTouchEnd, false);
 
     // overlay events
     button.addEventListener("click", openOverlay);
@@ -147,6 +151,21 @@ function addEventListeners() {
 
 
 //>Events
+function onTouchStart(e) {
+    for (let i = 0; i < e.touches.length; i++) {
+        var item = e.touches[i];
+        if (item.target.id == "canvas") {
+            var offsetX = item.clientX - canvas.getBoundingClientRect().left;
+            var offsetY = item.clientY - canvas.getBoundingClientRect().top;
+            console.log(offsetX, offsetY);
+            onMouseDown({ offsetX:offsetX, offsetY:offsetY });
+        }
+    }
+}
+function onTouchEnd(e) {
+    mouse.isMouseDragged = false;
+}
+
 function openOverlay() {
     console.log("pressed");
     drawPreview();
