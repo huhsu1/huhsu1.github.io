@@ -135,6 +135,7 @@ function addEventListeners() {
     // image cropper events for phone
     window.addEventListener("touchstart", onTouchStart, false);
     window.addEventListener("touchend", onTouchEnd, false);
+    window.addEventListener("touchmove", onTouchMove, false);
 
     // overlay events
     button.addEventListener("click", openOverlay);
@@ -164,6 +165,9 @@ function onTouchStart(e) {
 }
 function onTouchEnd(e) {
     mouse.isMouseDragged = false;
+}
+function onTouchMove(e) {
+    onMouseMove(e.touches[0]);
 }
 
 function openOverlay() {
