@@ -89,6 +89,8 @@ var container = document.getElementById("container");
 
 var download = document.getElementById("download");
 var button = document.getElementById("crop");
+var link = document.createElement("a");
+link.download = "cropped.png";
 //<init
 
 
@@ -146,7 +148,9 @@ function addEventListeners() {
         }
         modal.classList.add("hidden");
     });
-
+    download.addEventListener("click", function(e) {
+        link.click();
+    });
 }
 //<Event Listeners
 
@@ -174,13 +178,9 @@ function openOverlay() {
     console.log("pressed");
     drawPreview();
     modal.classList.remove("hidden");
-    download.addEventListener("click", function(e) {
-        var link = document.createElement("a");
-        link.download = "cropped.png";
-        link.href = preview.toDataURL();
-        link.click();
-    });
+    link.href = preview.toDataURL();
 }
+
 
 
 function onMouseMove(e) {
