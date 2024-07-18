@@ -87,14 +87,13 @@ button {
     display: table-cell;
 }
 </style>
-<p> Simple Image Cropper <br> Also works in mobile </p>
 
 <!--
 The image recreation from
 https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canvas
 -->
-<label> Image File: </label>
-<input type="file" id="imageLoader" name="imageLoader"/>
+<label> Image Input: </label>
+<input type="file" id="imageLoader" name="imageLoader" accept="image/*" capture="camera"/>
 
 <div id="modal" class="modal hidden">
     <div id="container" class="container">
@@ -109,7 +108,7 @@ https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canv
     </div>
 </div>
 
-<canvas id="canvas" width=1600 height=1600 style="border: 1px solid black"></canvas>
-<button id="crop">crop</button>
+<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
+<button id="crop">Crop</button>
 <script src="{{ base.url | prepend: site.url }}/scripts/imagecropper/imagecropper.js"> </script>
 

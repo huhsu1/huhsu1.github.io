@@ -15,7 +15,7 @@ h3                  { font-weight:bold; }
 <div id="personal info"> 
 <h2 style="text-align: center;">Sung Wan Huh</h2>
 <p style="text-align: center;">San Diego, CA, 92120 | huhsu1@berkeley.edu
-| +1 (760) 215-0165 </p>
+| +1 (760) 215-0165 | huhsu1.github.io </p>
 </div>
 <hr>
 
@@ -82,7 +82,7 @@ Frameworks and tools: Git, Ruby on Rails, PyTorch, NumPy, Pandas, OpenMP
 RISC-V CPU Circuit Design and RISC-V Assembly Programing
 </div>
 <div class="sub-para">
-Emulated a RISC-V CPU with Pipelining by drawing circuits in a digital circuit emulator
+Emulated a RISC-V CPU with Pipelining by drawing circuits in a digital circuit emulator <br>
 Wrote RISC-V assembly code to implement Matrix functions, such as MatMul, Argmax, Relu, and Dot
 </div>
 
@@ -90,9 +90,10 @@ Wrote RISC-V assembly code to implement Matrix functions, such as MatMul, Argmax
 Dental Implant Image Recognition with Machine Learning using PyTorch
 </div>
 <div class="sub-para">
-Created a dataset class that parses xlsx file to import the image paths and the classifications
-Used Inception_v3 model to train the data saving the state with best validation accuracy
-Has 93% validation accuracy on 42 Korean Implant models
+Created a dataset class that parses xlsx file to import the image paths and the classifications<br>
+Used Inception_v3 model to train the data saving the state with best validation accuracy<br>
+Has 93% validation accuracy on 42 Korean Implant models <br>
+Put the model online using onnxruntime on my website
 </div>
 
 </div>

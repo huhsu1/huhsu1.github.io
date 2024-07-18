@@ -1,5 +1,5 @@
 //>init
-const BOX_LINE_WIDTH = 2;
+const BOX_LINE_WIDTH = 8;
 const BOX_COLOR = "cyan";
 const BOX_EDGE_PADDING = 10;
 
