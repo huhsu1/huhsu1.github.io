@@ -45,6 +45,7 @@ var image = new Image();
 
 function handleExample(e) {
     image.onload = function() {
+        drawPresentingImage(image);
         drawImageOnCanvas(image);
         runPrediction(image);
     }
@@ -56,12 +57,23 @@ function handleImage(e) {
     var reader = new FileReader();
     reader.onload = function(event) {
         image.onload = function() {
+            drawPresentingImage(image);
             drawImageOnCanvas(image);
             runPrediction(image);
         }
         image.src = event.target.result;
     }
     reader.readAsDataURL(e.target.files[0]);
+}
+
+function drawPresentingImage(image) {
+    var imageHolder = document.getElementById("image");
+    var imagectx = imageHolder.getContext("2d");
+    imageHolder.width = image.width;
+    imageHolder.height = image.height;
+    imagectx.drawImage(image, 0, 0);
+    imageHolder.style.width = "50%";
+    
 }
 
 function drawImageOnCanvas(image) {

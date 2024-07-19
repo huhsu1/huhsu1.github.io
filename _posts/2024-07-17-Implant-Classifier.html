@@ -30,8 +30,11 @@ title: Implant Classifier
   background-color: #f1f1f1;
   transition: max-height 0.2s ease-out;
 }
-#imageHolder {
+#image {
     display: block;
+}
+#imageHolder {
+    display: none;
 }
 </style>
 
@@ -50,6 +53,8 @@ This model can classify 42 korean implants with 93% accuracy.
 <label> Image File: </label>
 <input type="file" id="imageLoader" name="imageLoader"/>
 <button id="example">Example</button>
+
+<canvas id="image"> </canvas>
 
 <canvas id="imageHolder"></canvas>
 
