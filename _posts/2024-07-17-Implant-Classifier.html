@@ -42,9 +42,9 @@ This model can classify 42 korean implants with 93% accuracy.
 
 <button class="collapsible">Supported Implant Models</button>
 <div class="content">
-<p id="implantlist">
-This shouldn't be showing up
-</p>
+    <p id="implantlist">
+    This shouldn't be showing up
+    </p>
 </div>
 
 <label> Image File: </label>
@@ -57,4 +57,51 @@ This shouldn't be showing up
 </p>
 
 <script type="module" src="{{ base.url | prepend: site.url }}/scripts/implantclassifier/implantclassifier.js"> </script>
+
+
+<button class="collapsible">How Did I Do This?</button>
+<div class="content">
+    First, here is the <a href="https://www.audleydentalsolutions.co.uk/assets/img/Dental-Implant-Safety-3.jpg">
+    example link</a> I found on google search. I cropped using my <a
+    href="https://huhsu1.github.io/2024/07/16/Image-Cropper.html">Image Cropper</a>.
+    <p>
+    The project is largely divided into 3 parts: choose a model, shape the input, put it online.
+    <br>
+    <b> 1. Choose a model.</b> <br>
+    I thought that I probably won't be able to do better than what's already out there. So, I
+    chose <a href="https://github.com/pytorch/vision/blob/main/torchvision/models/inception.py">
+    Inception_v3</a> that is on pytorch github. I took the code and trained the model myself to
+    have the model output only the desired classes. <br>
+    <b> 2. Shape the input. </b> <br>
+    To train the model myself, I had to create a dataset and a dataloader class to feed the model
+    images. <br>
+    To make the dataset, I used the xlsx file that came with the data, so I imported xlsx file
+    into pandas dataframe, and manipulated the columns to hold directories to the pictures. I
+    created a dictionary using unique implant models, which came out to 42 models. To get the item
+    from the dataset, I open the image, transform the image to 1x3x299x299 that Inception_v3
+    requires, and output the image and index of that model in the dictionary. So, the
+    dataset.__getitem__ returns input and it's classification in number. <br>
+    The dataloader was just made by the dataloader init using dataset. There were some
+    complications from shuffling due to the image dims, but overall, the init did the job. <br>
+    <b> 3. Put it online </b> <br>
+    Having done the previous steps, this one was relatively easier. This part is in this
+    page's source code, or my <a
+    href="https://github.com/huhsu1/huhsu1.github.io/blob/main/scripts/implantclassifier/implantclassifier.js">github
+    page</a>. <br>
+    I first looked into TensorFlowJS, but converting PyTorch .pt file to TF .pb file used an
+    outdated <a href="https://github.com/gmalivenko/pytorch2keras">pytorch2keras</a> that required
+    fidgeting the files to make it work due to onnx optimizer now being a separate item from
+    onnx. <br>
+    While looking into this, I realized that onnx has onnxruntime-web that can run ML on the
+    browser. It seemed that it was up to date, fast, and entirely client sided, so I decided to
+    use onnxruntime-web. <br>
+    The only way to access image data without using external libraries seemed like opening on
+    canvas and getting the image data, so I used canvas to open image. Since I can set the
+    canvas size, I made canvas into 299x299 pixels to transform the data. I then just needed to
+    convert flattened RGBA image data to 3x299x299 Float32Array that onnx takes as input, and run
+    inference. <br>
+    The inference takes roughly 300 - 800ms even on phone.
+    </p>
+</div>
+
 
