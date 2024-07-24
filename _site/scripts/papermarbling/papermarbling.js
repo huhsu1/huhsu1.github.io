@@ -9,6 +9,7 @@ function init() {
     canvas.addEventListener("contextmenu", clickEvent, false);
     canvas.addEventListener("mousedown", mouseDownEvent);
     canvas.addEventListener("mouseup", mouseUpEvent);
+    canvas.addEventListener("mousemove", mouseMoveEvent);
 }
 
 function fitToContainer(canvas) {
@@ -31,19 +32,37 @@ function clickEvent(e) {
 function mouseDownEvent(e) {
     B.x = e.offsetX * canvasRatio;
     B.y = e.offsetY * canvasRatio;
+    mouseDown = true;
+}
+
+function mouseMoveEvent(e) {
+    if (mouseDown) {
+        E.x = e.offsetX * canvasRatio;
+        E.y = e.offsetY * canvasRatio;
+        var width = E.x - B.x;
+        var height = E.y - B.y;
+        if ((width * width) + (height * height) >= Lsquared) {
+            strokeAll();
+            B.x = E.x;
+            B.y = E.y;
+        }
+        drawCanvas();
+    }
 }
 
 function mouseUpEvent(e) {
     E.x = e.offsetX * canvasRatio;
     E.y = e.offsetY * canvasRatio;
-    console.log(B.x, B.y);
-    console.log(E.x, E.y);
+    mouseDown = false;
 
-    for (let i = 0; i < DROP_LIST.length; i++) {
-        DROP_LIST[i].stroke(B, E);
-    }
-    console.log("stroked");
+    strokeAll();
     drawCanvas();
+}
+
+function strokeAll() {
+    for (let i = 0; i < DROP_LIST.length; i++) {
+        DROP_LIST[i].stroke(B, E, L);
+    }
 }
 
 function drawCanvas() {
@@ -62,7 +81,7 @@ function drawCanvas() {
 /* ------------------ stroke ----------------------- */
 /* https://people.csail.mit.edu/jaffer/Marbling/stroke.pdf */
 
-function stroke(P, B, E, L=100) {
+function stroke(P, B, E, L) {
     // everything is scaled. I make it divide into every 10 pixels
     // eq (15) in the paper
 
@@ -130,9 +149,6 @@ function Fxt(x, xb, xe, y, lambda, L) {
 /* ------------------- Stroke end ------------------- */
 
 /* ------------------- InkDrop ------------------- */
-const VERTEX_COUNT = 1000;
-const DROP_LIST = [];
-
 class InkDrop {
     constructor(x, y, r, color=null) {
         this.x = x;
@@ -179,9 +195,9 @@ class InkDrop {
         }
     }
 
-    stroke(B, E) {
+    stroke(B, E, L) {
         for (let i = 0; i < VERTEX_COUNT; i++) {
-            stroke(this.vertices[i], B, E);
+            stroke(this.vertices[i], B, E, L);
         }
     }
 
@@ -256,6 +272,12 @@ const ctx = canvas.getContext("2d");
 var canvasRatio;
 const B = new Vector(0, 0);
 const E = new Vector(0, 0);
+const VERTEX_COUNT = 1000;
+const DROP_LIST = [];
+const L = 100;
+const Lsquared = L*L;
+var mouseDown = false;
+
 
 init();
 

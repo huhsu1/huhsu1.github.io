@@ -7,8 +7,8 @@
 <meta name="generator" content="Jekyll v3.9.5" />
 <meta property="og:title" content="Paper Marbling" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Crop" />
-<meta property="og:description" content="Crop" />
+<meta name="description" content="Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = xb, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible." />
+<meta property="og:description" content="Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = xb, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible." />
 <link rel="canonical" href="http://localhost:4000/2024/07/23/Paper-Marbling.html" />
 <meta property="og:url" content="http://localhost:4000/2024/07/23/Paper-Marbling.html" />
 <meta property="og:site_name" content="huhsu1" />
@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Paper Marbling" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-07-23T00:00:00-07:00","datePublished":"2024-07-23T00:00:00-07:00","description":"Crop","headline":"Paper Marbling","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/07/23/Paper-Marbling.html"},"url":"http://localhost:4000/2024/07/23/Paper-Marbling.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-07-23T00:00:00-07:00","datePublished":"2024-07-23T00:00:00-07:00","description":"Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = xb, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible.","headline":"Paper Marbling","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/07/23/Paper-Marbling.html"},"url":"http://localhost:4000/2024/07/23/Paper-Marbling.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="huhsu1" /></head>
 <body><header class="site-header" role="banner">
@@ -47,8 +47,18 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
-<button id="crop">Crop</button>
+    Paper Marbling. <br>
+Right click to drop paint onto canvas.
+The paint drop was from this <a
+href="https://people.csail.mit.edu/jaffer/Marbling/Dropping-Paint">website</a>. <br>
+The combing is done by left clicking and dragging. <br>
+The combing calculation is from this <a
+href="https://people.csail.mit.edu/jaffer/Marbling/stroke.pdf">paper</a>. <br>
+I tweaked a couple calculations, like x = xb, y = (P-B) x N to get rid of unnecessary
+calculations. <br>
+Currently, everything is done on CPU. After making many circles, the latency starts to be
+noticible.
+<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
 <script src="http://localhost:4000/scripts/papermarbling/papermarbling.js"> </script>
 
   </div><a class="u-url" href="/2024/07/23/Paper-Marbling.html" hidden></a>
