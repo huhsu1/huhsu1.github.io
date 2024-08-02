@@ -1,0 +1,107 @@
+---
+layout: post
+title: Paper Marbling GPU
+---
+<style>
+/* style from https://www.w3schools.com/howto/howto_css_switch.asp */
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#header_info {
+    width: 100%;
+}
+
+#header_info li {
+    display: inline;
+}
+</style>
+
+
+WebGPU Accelerated Paper Marbling. <br>
+Right click to drop paint onto canvas.
+The combing is done by left clicking and dragging. <br>
+For logic, checkout <a href="{{}}">CPU Version</a>.
+WebGPU is not yet supported on FireFox. The demo should work on Chrome. <br>
+Calculations in itself takes less than 1ms even after 8,000,000 vertices. <br>
+Just for reference, my CPU version takes more than 4000ms. More analysis to come later. <br>
+
+<ul id="header_info">
+    <li>RenderStroke</li>
+    <li><label class="switch">
+            <input id="renderSwitch" type="checkbox" checked>
+            <span class="slider round"></span>
+        </label>
+    </li>
+    <li><p id="time">Average Compute Time: 0ms</li>
+    <li><button type="button" id="createButton">Create 1000</button></li>
+    <li><button type="button" id="strokeButton">Stroke 1000</button></li>
+</ul>
+</div>
+<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
+<script src="{{ base.url | prepend: site.url }}/scripts/papermarblinggpu/papermarblinggpu.js"> </script>
+
+I transcribed the CPU code into WebGPU shader (WGSL) to run in WebGPU. <br>
+The bottle neck comes from mapping gpu memory into cpu memory and rendering using canvas stroke.
+<br>
+The concave shapes need triangulation to render, so I decided that for now, I would give rendering logic to javascript's native rendering. <br>
+

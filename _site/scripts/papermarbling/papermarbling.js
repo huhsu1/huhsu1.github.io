@@ -22,7 +22,7 @@ function fitToContainer(canvas) {
 
 function clickEvent(e) {
     e.preventDefault();
-    var drop = new InkDrop(e.offsetX * canvasRatio, e.offsetY * canvasRatio, 500);
+    var drop = new InkDrop(e.offsetX * canvasRatio, e.offsetY * canvasRatio, 200);
     drawCanvas();
 
     return false;
@@ -82,10 +82,14 @@ function drawCanvas() {
 /* https://people.csail.mit.edu/jaffer/Marbling/stroke.pdf */
 
 function stroke(P, B, E, L) {
-    // everything is scaled. I make it divide into every 10 pixels
+    // everything is scaled. I make it divide into every L pixels
     // eq (15) in the paper
 
-    // TODO: I can be calc separately since all points use I
+    strokeQ(P, B, E, L);
+
+    // currently, I already separate input into segments of max length L
+    // so this division of segment into smaller parts is unnecessary
+    /*
     var I = vectorSub(E, B);
     var n = Math.ceil(Math.sqrt(I.getMagSquared()) / L);
     I.mult(1/n);
@@ -96,7 +100,7 @@ function stroke(P, B, E, L) {
         strokeQ(P, curr, next, L);
         curr = next;
         next = vectorAdd(curr, I);
-    }
+    }*/
 }
 
 function strokeQ(P, B, E, L) {
@@ -118,17 +122,16 @@ function strokeQ(P, B, E, L) {
 
     // Used to cross with P - (B + E)/ 2, but can just cross with P-B same thing
     var y = crossScalar(N, pMinusB);
-    var x = xb;
 
     // force on rotated x as scalar in x direction
-    var fxt = Fxt(x, xb, xe, y, lambda, L);
+    var fxt = Fxt(xb, xe, y, lambda, L);
 
     // Fx only has x component
     // rotation of [[Nx -Ny] [Ny Nx]] can just be Nx*fxt, Ny*fxt
     P.add(N.x * fxt, N.y * fxt);
 }
 
-function Fxt(x, xb, xe, y, lambda, L) {
+function Fxt(xb, xe, y, lambda, L) {
     // note Ut = xe - xb = lambda scalar on this x plane
     // Fx multiplies by U, but strokeQ multiplies by t
     // t becomes obsolete -> just use Ut = xe - xb
@@ -139,8 +142,8 @@ function Fxt(x, xb, xe, y, lambda, L) {
     var y2 = y*y;
 
     // such similar computations
-    var r = Math.sqrt((xb)*(xb) + y2);
-    var s = Math.sqrt((xe)*(xe) + y2);
+    var r = Math.sqrt(xb*xb + y2);
+    var s = Math.sqrt(xe*xe + y2);
     var lhs = (1 - (y2/(r*L))) * Math.exp(0-r/L);
     var rhs = (1 - (y2/(s*L))) * Math.exp(0-s/L);
     return lambda / 2 * (lhs + rhs);
@@ -184,9 +187,11 @@ class InkDrop {
     }
 
     push() {
+        var start = Date.now();
         for (let i = 0; i < DROP_LIST.length; i++) {
             DROP_LIST[i].update(this.x, this.y, this.r);
         }
+        console.log(Date.now() - start);
     }
 
     update(centerX, centerY, radius) {
@@ -265,6 +270,14 @@ function updatePoint(point, centerX, centerY, radius) {
     point.y += centerY;
 }
 
+function randomCreate(n) {
+    for (let i = 0; i < n ;i++) {
+        new InkDrop(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() *
+        200);
+    }
+    drawCanvas();
+}
+
 /* ------------------- Helper end--------------------- */
 
 const canvas = document.getElementById("canvas")
@@ -272,7 +285,7 @@ const ctx = canvas.getContext("2d");
 var canvasRatio;
 const B = new Vector(0, 0);
 const E = new Vector(0, 0);
-const VERTEX_COUNT = 1000;
+const VERTEX_COUNT = 8192;
 const DROP_LIST = [];
 const L = 100;
 const Lsquared = L*L;

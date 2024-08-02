@@ -9,9 +9,9 @@ href="https://people.csail.mit.edu/jaffer/Marbling/Dropping-Paint">website</a>. 
 The combing is done by left clicking and dragging. <br>
 The combing calculation is from this <a
 href="https://people.csail.mit.edu/jaffer/Marbling/stroke.pdf">paper</a>. <br>
-I tweaked a couple calculations, like x = xb, y = (P-B) x N to get rid of unnecessary
+I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unnecessary
 calculations. <br>
 Currently, everything is done on CPU. After making many circles, the latency starts to be
 noticible.
-<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
+<canvas id="canvas" width=2048 height=2048 style="border: 1px solid black"></canvas>
 <script src="{{ base.url | prepend: site.url }}/scripts/papermarbling/papermarbling.js"> </script>
