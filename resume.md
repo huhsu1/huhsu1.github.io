@@ -70,7 +70,7 @@ Helped create a more accessible and friendly environment to the students
 <div class="sub-para">
 Programing languages: Java, Python, C, Ruby, Assembly, SQL, JavaScript, MatLab, Julia <br>
 Techniques: Object Oriented Programing, Test Driven Development, Behavior Driven Design <br>
-Frameworks and tools: Git, Ruby on Rails, PyTorch, NumPy, Pandas, OpenMP
+Frameworks and tools: Git, Ruby on Rails, PyTorch, NumPy, Pandas, OpenMP, PySpark
 </div>
 
 </div>
@@ -79,11 +79,12 @@ Frameworks and tools: Git, Ruby on Rails, PyTorch, NumPy, Pandas, OpenMP
 <div id="projects">
 <h3> Projects </h3>
 <div class="sub-title">
-RISC-V CPU Circuit Design and RISC-V Assembly Programing
+RISC-V CPU Circuit Design and Vectorized RISC-V Assembly Programing
 </div>
 <div class="sub-para">
 Emulated a RISC-V CPU with Pipelining by drawing circuits in a digital circuit emulator <br>
-Wrote RISC-V assembly code to implement Matrix functions, such as MatMul, Argmax, Relu, and Dot
+Wrote vectorized RISC-V assembly code to implement Matrix functions,<br>
+such as MatMul, Argmax, Relu, and Dot.
 </div>
 
 <div class="sub-title">
