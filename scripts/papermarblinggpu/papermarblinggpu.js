@@ -504,6 +504,7 @@ function stroke(bx, by, ex, ey, L) {
     var end = Date.now() - startTime;
     console.log(end);
     totalTime += end;
+    latestTime = end;
     howManyTimes += 1;
 }
 
@@ -543,7 +544,8 @@ function strokeSubmit() {
 
 /* ---------------- Render ------------------------------- */
 async function render() {
-    timeWrite.innerText = `Average Compute Time: ${Math.round(totalTime/howManyTimes)}ms`;
+    totalTimeWrite.innerText = Math.round(totalTime/howManyTimes * 100) / 100;
+    latestTimeWrite.innerText = latestTime;
     await gpuPointers.gpuReadBuffer.mapAsync(GPUMapMode.READ);
 
     var arr = new Float32Array(gpuPointers.gpuReadBuffer.getMappedRange());
@@ -590,7 +592,7 @@ async function createRandom(n, draw=false) {
             render();
         } 
         await drop(Math.random()*canvas.width, Math.random()*canvas.height,
-        Math.random()*150 + 150);
+        Math.random()*200);
     }
     render();
 }
@@ -627,9 +629,11 @@ const colorArray = [];
 const characteristicLength = 100;
 const Lsquared = characteristicLength * characteristicLength;
 const minLength = characteristicLength / 10;
+var latestTime = 0;
 var totalTime = 0;
 var howManyTimes = 0;
-const timeWrite = document.getElementById("time");
+const totalTimeWrite = document.getElementById("totalTime");
+const latestTimeWrite = document.getElementById("latestTime");
 const createButton = document.getElementById("createButton");
 const strokeButton = document.getElementById("strokeButton");
 

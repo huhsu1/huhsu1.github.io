@@ -2,7 +2,17 @@
 layout: post
 title: Paper Marbling
 ---
+<style>
+#header_info {
+    width: 100%;
+}
+
+#header_info li {
+    display: inline;
+}
+</style>
 Paper Marbling. <br>
+CURRENTLY BUGGY THE DROPS POOF WILL FIX SOON <br>
 Right click to drop paint onto canvas.
 The paint drop was from this <a
 href="https://people.csail.mit.edu/jaffer/Marbling/Dropping-Paint">website</a>. <br>
@@ -13,5 +23,13 @@ I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unneces
 calculations. <br>
 Currently, everything is done on CPU. After making many circles, the latency starts to be
 noticible.
+
+<ul id="header_info">
+    <li><p>Average Compute Time: <span id="totalTime">0</span>ms</li>
+    <li><p>Latest Compute Time: <span id="latestTime">0</span>ms</li>
+    <li><button type="button" id="createButton">Create 100</button></li>
+    <li><button type="button" id="strokeButton">Stroke 100</button></li>
+</ul>
+
 <canvas id="canvas" width=2048 height=2048 style="border: 1px solid black"></canvas>
 <script src="{{ base.url | prepend: site.url }}/scripts/papermarbling/papermarbling.js"> </script>

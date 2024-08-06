@@ -7,8 +7,8 @@
 <meta name="generator" content="Jekyll v3.9.5" />
 <meta property="og:title" content="Paper Marbling" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible." />
-<meta property="og:description" content="Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible." />
+<meta name="description" content="Welcome to SungWan’s website. I’ve uploaded some projects so you can see easier." />
+<meta property="og:description" content="Welcome to SungWan’s website. I’ve uploaded some projects so you can see easier." />
 <link rel="canonical" href="http://localhost:4000/2024/07/23/Paper-Marbling.html" />
 <meta property="og:url" content="http://localhost:4000/2024/07/23/Paper-Marbling.html" />
 <meta property="og:site_name" content="huhsu1" />
@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Paper Marbling" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-07-23T00:00:00-07:00","datePublished":"2024-07-23T00:00:00-07:00","description":"Paper Marbling. Right click to drop paint onto canvas. The paint drop was from this website. The combing is done by left clicking and dragging. The combing calculation is from this paper. I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unnecessary calculations. Currently, everything is done on CPU. After making many circles, the latency starts to be noticible.","headline":"Paper Marbling","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/07/23/Paper-Marbling.html"},"url":"http://localhost:4000/2024/07/23/Paper-Marbling.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-07-23T00:00:00-07:00","datePublished":"2024-07-23T00:00:00-07:00","description":"Welcome to SungWan’s website. I’ve uploaded some projects so you can see easier.","headline":"Paper Marbling","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/07/23/Paper-Marbling.html"},"url":"http://localhost:4000/2024/07/23/Paper-Marbling.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="huhsu1" /></head>
 <body><header class="site-header" role="banner">
@@ -47,7 +47,17 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    Paper Marbling. <br>
+    <style>
+#header_info {
+    width: 100%;
+}
+
+#header_info li {
+    display: inline;
+}
+</style>
+Paper Marbling. <br>
+CURRENTLY BUGGY THE DROPS POOF WILL FIX SOON <br>
 Right click to drop paint onto canvas.
 The paint drop was from this <a
 href="https://people.csail.mit.edu/jaffer/Marbling/Dropping-Paint">website</a>. <br>
@@ -58,6 +68,14 @@ I tweaked a couple calculations, like x = 0, y = (P-B) x N to get rid of unneces
 calculations. <br>
 Currently, everything is done on CPU. After making many circles, the latency starts to be
 noticible.
+
+<ul id="header_info">
+    <li><p>Average Compute Time: <span id="totalTime">0</span>ms</li>
+    <li><p>Latest Compute Time: <span id="latestTime">0</span>ms</li>
+    <li><button type="button" id="createButton">Create 100</button></li>
+    <li><button type="button" id="strokeButton">Stroke 100</button></li>
+</ul>
+
 <canvas id="canvas" width=2048 height=2048 style="border: 1px solid black"></canvas>
 <script src="http://localhost:4000/scripts/papermarbling/papermarbling.js"> </script>
 

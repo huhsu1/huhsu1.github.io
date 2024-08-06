@@ -5,6 +5,9 @@ async function init() {
         console.log("resizing");
         canvasRatio = canvas.width / canvas.offsetWidth;
     }
+    initCollapsibleList();
+
+    // Logic Init
     numCircles = 0;
 
     await gpuInit();
@@ -15,6 +18,22 @@ async function init() {
 function fitToContainer(canvas) {
     canvas.style.width = "100%";
     canvas.style.height = "100%";
+}
+
+function initCollapsibleList() {
+    var coll = document.getElementsByClassName("collapsible");
+
+    for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
 }
 
 
@@ -132,25 +151,11 @@ async function initBuffers() {
 
     const bufferSize = getBufferSize(SUPPORTED_NUM_DROPS);
 
-    gpuPointers.numBuffers = 2;
-    gpuPointers.buffers = [];
-    gpuPointers.srcBufferIndex = 0;
-    for (let i = 0; i < gpuPointers.numBuffers; i++) {
-        gpuPointers.buffers.push(gpuPointers.device.createBuffer( {
-            mappedAtCreation: false,
-            size: bufferSize,
-            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC
-        }));
-    }
-
-    gpuPointers.getSourceBuffer = function() {
-        return gpuPointers.buffers[gpuPointers.srcBufferIndex];
-    }
-    gpuPointers.getDestBuffer = function() {
-        return gpuPointers.buffers[(gpuPointers.srcBufferIndex + 1) % 2];
-    }
-
-
+    gpuPointers.srcBuffer = gpuPointers.device.createBuffer({
+        mappedAtCreation: false,
+        size: bufferSize,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC
+    });
 
     // Read Buffer
     const gpuReadBuffer = gpuPointers.device.createBuffer( {
@@ -181,14 +186,7 @@ function initBindingLayout() {
                 binding: 1,
                 visibility: GPUShaderStage.COMPUTE,
                 buffer: {
-                    type: "read-only-storage",
-                }
-            },
-            {
-                binding: 2,
-                visibility: GPUShaderStage.COMPUTE,
-                buffer: {
-                    type: "storage"
+                    type: "storage",
                 }
             }
         ]
@@ -213,10 +211,7 @@ function initBindingLayout() {
            }
         ]
     });
-}
-
-function getOneToOneBindGroup() {
-    return gpuPointers.device.createBindGroup({
+    gpuPointers.oneToOneBindGroup = gpuPointers.device.createBindGroup({
         label: "bindgroup with all vertices",
         layout: gpuPointers.bindGroupOneToOneLayout,
         entries: [
@@ -229,21 +224,12 @@ function getOneToOneBindGroup() {
             {
                 binding: 1,
                 resource: {
-                    buffer: gpuPointers.getSourceBuffer(),
-                }
-            },
-            {
-                binding: 2,
-                resource: {
-                    buffer: gpuPointers.getDestBuffer()
+                    buffer: gpuPointers.srcBuffer,
                 }
             }
         ]
     });
-}
-
-function getCreateDropBindGroup() {
-    return gpuPointers.device.createBindGroup({
+    gpuPointers.createDropBindGroup = gpuPointers.device.createBindGroup({
         label: "bindgroup to append new drop",
         layout: gpuPointers.bindGroupCreateDropLayout,
         entries: [
@@ -256,7 +242,7 @@ function getCreateDropBindGroup() {
             {
                 binding: 1,
                 resource: {
-                    buffer: gpuPointers.getDestBuffer(),
+                    buffer: gpuPointers.srcBuffer,
                     size: NUM_DETAIL*4*2
                 }
             }
@@ -279,8 +265,7 @@ function initComputeShaders() {
             }
 
             @group(0) @binding(0) var<uniform> input : Input;
-            @group(0) @binding(1) var<storage, read> source : Drops;
-            @group(0) @binding(2) var<storage, read_write> destination : Drops;
+            @group(0) @binding(1) var<storage, read_write> source : Drops;
 
             @compute @workgroup_size(128)
             fn main(@builtin(global_invocation_id) global_id : vec3u) {
@@ -296,7 +281,7 @@ function initComputeShaders() {
                 let rhs = sqrt(1 + ((input.radius * input.radius) / ((pMinusC.x * pMinusC.x) + (pMinusC.y *
                 pMinusC.y))));
 
-                destination.vertices[id] = input.newDropCenter + (pMinusC * rhs);
+                source.vertices[id] = input.newDropCenter + (pMinusC * rhs);
            }
         `
     });
@@ -351,8 +336,7 @@ function initComputeShaders() {
                 vertices: array<vec2f>,
             }
             @group(0) @binding(0) var<uniform> input : Input;
-            @group(0) @binding(1) var<storage, read> source : Drops;
-            @group(0) @binding(2) var<storage, read_write> destination : Drops;
+            @group(0) @binding(1) var<storage, read_write> source : Drops;
 
             @compute @workgroup_size(128)
             fn main(@builtin(global_invocation_id) global_id : vec3u) {
@@ -379,7 +363,7 @@ function initComputeShaders() {
 
                 let fxt = (lhs + rhs) / 2;
 
-                destination.vertices[id] = p + (stroke * fxt);
+                source.vertices[id] = p + (stroke * fxt);
            }
 
            fn crossScalar(a:vec2f, b:vec2f) -> f32 {
@@ -424,7 +408,7 @@ function initPipeline() {
 function copyDestBufferToReadBuffer() {
     const commandEncoder = gpuPointers.device.createCommandEncoder();
     // copy to read buffer at the end to finish
-    commandEncoder.copyBufferToBuffer( gpuPointers.getDestBuffer(), 0,
+    commandEncoder.copyBufferToBuffer( gpuPointers.srcBuffer, 0,
     gpuPointers.gpuReadBuffer,0, getBufferSize(numCircles) );
 
     const gpuCommands = commandEncoder.finish();
@@ -463,7 +447,6 @@ function dropGPUSide(inputArray) {
 
     // epilogue
     copyDestBufferToReadBuffer();
-    gpuPointers.srcBufferIndex = (gpuPointers.srcBufferIndex == 0) ? 1 : 0;
 }
 
 function submitCreateDropCompute() {
@@ -475,7 +458,7 @@ function submitCreateDropCompute() {
     let dynamicOffset = ((numCircles-1)%SUPPORTED_NUM_DROPS)*NUM_DETAIL*2*4;
 
     passEncoder.setPipeline(gpuPointers.createDropComputePipeline);
-    passEncoder.setBindGroup(0, getCreateDropBindGroup(), [dynamicOffset]);
+    passEncoder.setBindGroup(0, gpuPointers.createDropBindGroup, [dynamicOffset]);
 
     // 64 here because it's more usual number for num workers
     // out of bounds no longer a problem when just adding one drop
@@ -494,7 +477,7 @@ function submitDropComputeOnExisting() {
     const passEncoder = commandEncoder.beginComputePass();
 
     passEncoder.setPipeline(gpuPointers.dropComputePipeline);
-    passEncoder.setBindGroup(0, getOneToOneBindGroup());
+    passEncoder.setBindGroup(0, gpuPointers.oneToOneBindGroup);
     // NOTE our work group size is 128 -> this means we dispatch work group by dividing by 128
     // no SIMD? is 128 wide, but I think it's an easy way to fit all my vertices
     // since it's just gonna make that work group go sequential which is the result anyways
@@ -521,6 +504,7 @@ function stroke(bx, by, ex, ey, L) {
     var end = Date.now() - startTime;
     console.log(end);
     totalTime += end;
+    latestTime = end;
     howManyTimes += 1;
 }
 
@@ -533,7 +517,6 @@ function strokeGPU(inputArray) {
 
     // epilogue
     copyDestBufferToReadBuffer();
-    gpuPointers.srcBufferIndex = (gpuPointers.srcBufferIndex == 0) ? 1 : 0;
 }
 
 function strokeSubmit() {
@@ -542,7 +525,7 @@ function strokeSubmit() {
     const passEncoder = commandEncoder.beginComputePass();
 
     passEncoder.setPipeline(gpuPointers.strokeComputePipeline);
-    passEncoder.setBindGroup(0, getOneToOneBindGroup());
+    passEncoder.setBindGroup(0, gpuPointers.oneToOneBindGroup);
     // NOTE our work group size is 128 -> this means we dispatch work group by dividing by 128
     // no SIMD? is 128 wide, but I think it's an easy way to fit all my vertices
     // since it's just gonna make that work group go sequential which is the result anyways
@@ -561,7 +544,8 @@ function strokeSubmit() {
 
 /* ---------------- Render ------------------------------- */
 async function render() {
-    timeWrite.innerText = `Average Compute Time: ${Math.round(totalTime/howManyTimes)}ms`;
+    totalTimeWrite.innerText = Math.round(totalTime/howManyTimes * 100) / 100;
+    latestTimeWrite.innerText = latestTime;
     await gpuPointers.gpuReadBuffer.mapAsync(GPUMapMode.READ);
 
     var arr = new Float32Array(gpuPointers.gpuReadBuffer.getMappedRange());
@@ -608,7 +592,7 @@ async function createRandom(n, draw=false) {
             render();
         } 
         await drop(Math.random()*canvas.width, Math.random()*canvas.height,
-        Math.random()*100 + 100);
+        Math.random()*200);
     }
     render();
 }
@@ -645,11 +629,13 @@ const colorArray = [];
 const characteristicLength = 100;
 const Lsquared = characteristicLength * characteristicLength;
 const minLength = characteristicLength / 10;
+var latestTime = 0;
 var totalTime = 0;
 var howManyTimes = 0;
-const timeWrite = document.getElementById("time");
+const totalTimeWrite = document.getElementById("totalTime");
+const latestTimeWrite = document.getElementById("latestTime");
 const createButton = document.getElementById("createButton");
 const strokeButton = document.getElementById("strokeButton");
- 
+
 init();
 

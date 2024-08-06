@@ -24,9 +24,7 @@ function clickEvent(e) {
     e.preventDefault();
     var drop = new InkDrop(e.offsetX * canvasRatio, e.offsetY * canvasRatio, 200);
     drawCanvas();
-
     return false;
-
 }
 
 function mouseDownEvent(e) {
@@ -278,6 +276,20 @@ function randomCreate(n) {
     drawCanvas();
 }
 
+async function strokeRandom(n, draw=false) {
+    for (let i = 0; i < n ; i++) {
+        if (draw) {
+            drawCanvas();
+        }
+        B.x = Math.random()*canvas.width;
+        B.y = Math.random()*canvas.height;
+        let angle = Math.random()*2*Math.PI;
+        E.x = startX + Math.cos(angle) * L;
+        E.y = startY + Math.sin(angle) * L;
+        strokeAll();
+    }
+    drawCanvas();
+}
 /* ------------------- Helper end--------------------- */
 
 const canvas = document.getElementById("canvas")
@@ -290,6 +302,11 @@ const DROP_LIST = [];
 const L = 100;
 const Lsquared = L*L;
 var mouseDown = false;
+const totalTimeWrite = document.getElementById("totalTime");
+const latestTimeWrite = document.getElementById("latestTime");
+const createButton = document.getElementById("createButton");
+const strokeButton = document.getElementById("strokeButton");
+
 
 
 init();

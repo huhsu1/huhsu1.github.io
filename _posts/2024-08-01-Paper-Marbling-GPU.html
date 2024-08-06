@@ -3,6 +3,33 @@ layout: post
 title: Paper Marbling GPU
 ---
 <style>
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  transition: max-height 0.2s ease-out;
+}
+
 /* style from https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .switch {
@@ -74,16 +101,23 @@ input:checked + .slider:before {
 #header_info li {
     display: inline;
 }
+
 </style>
 
-
+<div id="explanation">
+<a href="{{ base.url | prepend: site.url }}/2024/07/23/Paper-Marbling.html">CPU Version</a> <br>
 WebGPU Accelerated Paper Marbling. <br>
 Right click to drop paint onto canvas.
 The combing is done by left clicking and dragging. <br>
-For logic, checkout <a href="{{}}">CPU Version</a>.
 WebGPU is not yet supported on FireFox. The demo should work on Chrome. <br>
-Calculations in itself takes less than 1ms even after 8,000,000 vertices. <br>
-Just for reference, my CPU version takes more than 4000ms. More analysis to come later. <br>
+I transcribed the CPU code into WebGPU shader (WGSL) to run in WebGPU. <br>
+The bottle neck comes from mapping gpu memory into cpu memory and rendering using canvas stroke.
+<br>
+It keeps track of at max 1023 circles. Compute time is at max 5ms even at max number.<br>
+In comparison, CPU version reachs 700ms by 200 circles. <br>
+RenderStroke renders every 100px, so when there are a lot of points, the above bottle neck
+becomes a problem. You can turn RenderStroke off to render whenever you are done dragging.
+</div>
 
 <ul id="header_info">
     <li>RenderStroke</li>
@@ -92,16 +126,71 @@ Just for reference, my CPU version takes more than 4000ms. More analysis to come
             <span class="slider round"></span>
         </label>
     </li>
-    <li><p id="time">Average Compute Time: 0ms</li>
+    <li><p>Average Compute Time: <span id="totalTime">0</span>ms</li>
+    <li><p>Latest Compute Time: <span id="latestTime">0</span>ms</li>
     <li><button type="button" id="createButton">Create 1000</button></li>
     <li><button type="button" id="strokeButton">Stroke 1000</button></li>
 </ul>
-</div>
-<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
-<script src="{{ base.url | prepend: site.url }}/scripts/papermarblinggpu/papermarblinggpu.js"> </script>
 
-I transcribed the CPU code into WebGPU shader (WGSL) to run in WebGPU. <br>
-The bottle neck comes from mapping gpu memory into cpu memory and rendering using canvas stroke.
-<br>
-The concave shapes need triangulation to render, so I decided that for now, I would give rendering logic to javascript's native rendering. <br>
+<canvas id="canvas" width=4800 height=4800 style="border: 1px solid black"></canvas>
+
+<button type="button" class="collapsible">How Did I Do This?</button>
+<div class="content">
+The overall logic is written out in the <a href="{{ base.url | prepend: site.url
+}}/2024/07/23/Paper-Marbling.html">CPU Version</a>. <br>
+<h3><b>Why GPU?</b></h3>
+Each vertex moves based on it's current position and the force acting upon
+them. There is no dependence on each other to create the new state, which means it is easily
+parallelizable or possibly super fast on the GPU. <br>
+<h3><b>Method</b></h3>
+I use 4 buffers, small UNIFORM one for input, one read-write buffers for vertex data, and a read
+buffer to map to CPU. <br>
+I used uniform for the input, since it is small and should be accessible by all processes. It also
+doesn't change during the executing process. <br>
+I used to  two read-write buffers similar to a swapchainm, but I found out it is possible to just compute in
+place. I've seen no compute difference with a single buffer and double buffer. <br>
+Currently, the buffer supports 1023 "circles"(8192 sided polygons).<br>
+Lastly, there needs to be a buffer for mapping to CPU. <br>
+<b>1. Create Drop</b><br>
+I put into input buffer drop location, total vertices, and radius.<br>
+First, I submit the current vertices' offsets calculator. It takes info from input buffer to
+calculate the new point. <br>
+Next, I submit the new drop creater. I get the subbuffer to write the new vertices to by setting
+the size and the dynamic offset. <br>
+These should work parallel since there are no overlapping data points (other than UNIFORM). <br>
+I made the buffer into a circular list to delete oldest first circle when reaching max number of
+circles.<br>
+<b>2. Stroke</b><br>
+This just works the same way as first half of create drop. <br>
+<h3><b>Render</b></h3>
+Currently, the rendering is done by mapping the data into CPU and using 2d context on canvas to
+fill. The possibly concave shapes make rendering difficult on the GPU, and for now, I've decided
+to utilize canvas's strokes.
+</div>
+
+<button type="button" class="collapsible">What's next?</button>
+<div class="content">
+<h3><b>Problem</b></h3>
+The bottle necks are: mapping GPU data into CPU, rendering.<br>
+Both of these would be solved by handling rendering in the GPU. <br>
+However, the rendering is difficult because the shapes are possibly concave. <br>
+Here are two solutions I'm thinking of trying.<br>
+<h3><b>Possible Solutions</b></h3>
+<b>1. Fill rule</b><br>
+By calling fill rule on all the pixels on the canvas, I can color in the parts "in" the
+shape.<br>
+The calculations are relatively simple by map-reduce. I could also do non-zero to not worry about
+reduce.<br>
+However, I would have to call even-odd rule 4800*4800(# pixels)*8192(# sides)*1023(# circles)
+times. And, the calls would have to be sequential between the circles. I might be ablie to save
+some time by going backwards and keeping track of colored pixles.<br>
+<b>2. Triangulation</b><br>
+It seems like ear-clipping is the most conventional way to triangulate, and it is <a
+href="https://ieeexplore.ieee.org/document/6641459">possible in the gpu</a>. I think this might be
+worth trying.
+</div>
+
+<script src="{{ base.url | prepend: site.url }}/scripts/papermarblinggpu/papermarblinggpu.js">
+</script>
+
 
