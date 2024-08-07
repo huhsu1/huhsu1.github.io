@@ -28,9 +28,11 @@ function clickEvent(e) {
 }
 
 function mouseDownEvent(e) {
-    B.x = e.offsetX * canvasRatio;
-    B.y = e.offsetY * canvasRatio;
-    mouseDown = true;
+    if (e.button == 0) {
+        B.x = e.offsetX * canvasRatio;
+        B.y = e.offsetY * canvasRatio;
+        mouseDown = true;
+    }
 }
 
 function mouseMoveEvent(e) {
@@ -39,7 +41,11 @@ function mouseMoveEvent(e) {
         E.y = e.offsetY * canvasRatio;
         var width = E.x - B.x;
         var height = E.y - B.y;
-        if ((width * width) + (height * height) >= Lsquared) {
+        distance = (width * width) + (height * height);
+        if (distance < 5) {
+            return;
+        }
+        if (distance >= Lsquared) {
             strokeAll();
             B.x = E.x;
             B.y = E.y;
@@ -49,12 +55,14 @@ function mouseMoveEvent(e) {
 }
 
 function mouseUpEvent(e) {
-    E.x = e.offsetX * canvasRatio;
-    E.y = e.offsetY * canvasRatio;
-    mouseDown = false;
+    if (e.button == 0) {
+        E.x = e.offsetX * canvasRatio;
+        E.y = e.offsetY * canvasRatio;
+        mouseDown = false;
 
-    strokeAll();
-    drawCanvas();
+        strokeAll();
+        drawCanvas();
+    }
 }
 
 function strokeAll() {
