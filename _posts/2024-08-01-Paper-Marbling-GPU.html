@@ -102,12 +102,16 @@ input:checked + .slider:before {
     display: inline;
 }
 
+#canvas {
+    touch-action: none;
+}
+
 </style>
 
 <div id="explanation">
 <a href="{{ base.url | prepend: site.url }}/2024/07/23/Paper-Marbling.html">CPU Version</a> <br>
 WebGPU Accelerated Paper Marbling. <br>
-Right click to drop paint onto canvas.
+Right click or hold touch to drop paint onto canvas.
 The combing is done by left clicking and dragging. <br>
 WebGPU is not yet supported on FireFox. The demo should work on Chrome. <br>
 I transcribed the CPU code into WebGPU shader (WGSL) to run in WebGPU. <br>

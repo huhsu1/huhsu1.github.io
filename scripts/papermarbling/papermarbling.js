@@ -22,7 +22,7 @@ function fitToContainer(canvas) {
 
 function clickEvent(e) {
     e.preventDefault();
-    var drop = new InkDrop(e.offsetX * canvasRatio, e.offsetY * canvasRatio, 200);
+    new InkDrop(e.offsetX * canvasRatio, e.offsetY * canvasRatio, 200);
     drawCanvas();
     return false;
 }
@@ -185,11 +185,9 @@ class InkDrop {
     }
 
     push() {
-        var start = Date.now();
         for (let i = 0; i < DROP_LIST.length; i++) {
             DROP_LIST[i].update(this.x, this.y, this.r);
         }
-        console.log(Date.now() - start);
     }
 
     update(centerX, centerY, radius) {
