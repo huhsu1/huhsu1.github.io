@@ -421,7 +421,6 @@ function copyDestBufferToReadBuffer() {
 /* ----------------- Drop Logic _________________________ */
 
 async function drop(x, y, r) {
-
     var startTime = Date.now();
 
     var inputArray = new Float32Array([ 0, numCircles*NUM_DETAIL, x, y, r, 0 ]);
@@ -430,9 +429,11 @@ async function drop(x, y, r) {
     numCircles++;
 
     dropGPUSide(inputArray);
+
     var end = Date.now() - startTime;
     console.log(end);
     totalTime += end;
+    latestTime = end;
     howManyTimes += 1;
 }
 
@@ -498,9 +499,10 @@ function submitDropComputeOnExisting() {
 /* ---------------- Stroke Logic ------------------------- */
 function stroke(bx, by, ex, ey, L) {
     var startTime = Date.now();
-    var inputArray = new Float32Array([ bx, by, ex, ey, L, numCircles * NUM_DETAIL ]);
 
+    var inputArray = new Float32Array([ bx, by, ex, ey, L, numCircles * NUM_DETAIL ]);
     strokeGPU(inputArray);
+
     var end = Date.now() - startTime;
     console.log(end);
     totalTime += end;

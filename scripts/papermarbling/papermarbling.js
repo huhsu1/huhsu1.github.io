@@ -10,6 +10,8 @@ function init() {
     canvas.addEventListener("mousedown", mouseDownEvent);
     canvas.addEventListener("mouseup", mouseUpEvent);
     canvas.addEventListener("mousemove", mouseMoveEvent);
+    createButton.addEventListener("click", createButtonEvent);
+    strokeButton.addEventListener("click", strokeButtonEvent);
 }
 
 function fitToContainer(canvas) {
@@ -65,13 +67,30 @@ function mouseUpEvent(e) {
     }
 }
 
+function createButtonEvent(e) {
+    createRandom(100);
+}
+
+function strokeButtonEvent(e) {
+    strokeRandom(100);
+}
+
 function strokeAll() {
+    var startTime = Date.now();
     for (let i = 0; i < DROP_LIST.length; i++) {
         DROP_LIST[i].stroke(B, E, L);
     }
+
+    var end = Date.now() - startTime;
+    totalTime += end;
+    latestTime = end;
+    howManyTimes += 1;
 }
 
 function drawCanvas() {
+    totalTimeWrite.innerText = Math.round(totalTime/howManyTimes * 100) / 100;
+    latestTimeWrite.innerText = latestTime;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < DROP_LIST.length; i++) {
         DROP_LIST[i].draw(ctx);
@@ -160,6 +179,7 @@ function Fxt(xb, xe, y, lambda, L) {
 /* ------------------- InkDrop ------------------- */
 class InkDrop {
     constructor(x, y, r, color=null) {
+        var startTime = Date.now();
         this.x = x;
         this.y = y;
         this.r = r;
@@ -179,6 +199,12 @@ class InkDrop {
         }
         this.push();
         DROP_LIST.push(this);
+
+        var end = Date.now() - startTime;
+        console.log(end);
+        totalTime += end;
+        latestTime = end;
+        howManyTimes += 1;
     }
 
     draw() {
@@ -274,7 +300,7 @@ function updatePoint(point, centerX, centerY, radius) {
     point.y += centerY;
 }
 
-function randomCreate(n) {
+function createRandom(n) {
     for (let i = 0; i < n ;i++) {
         new InkDrop(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() *
         200);
@@ -282,7 +308,7 @@ function randomCreate(n) {
     drawCanvas();
 }
 
-async function strokeRandom(n, draw=false) {
+function strokeRandom(n, draw=false) {
     for (let i = 0; i < n ; i++) {
         if (draw) {
             drawCanvas();
@@ -290,8 +316,8 @@ async function strokeRandom(n, draw=false) {
         B.x = Math.random()*canvas.width;
         B.y = Math.random()*canvas.height;
         let angle = Math.random()*2*Math.PI;
-        E.x = startX + Math.cos(angle) * L;
-        E.y = startY + Math.sin(angle) * L;
+        E.x = B.x + Math.cos(angle) * L;
+        E.y = B.y + Math.sin(angle) * L;
         strokeAll();
     }
     drawCanvas();
@@ -308,11 +334,14 @@ const DROP_LIST = [];
 const L = 100;
 const Lsquared = L*L;
 var mouseDown = false;
+
+var latestTime = 0;
+var totalTime = 0;
+var howManyTimes = 0;
 const totalTimeWrite = document.getElementById("totalTime");
 const latestTimeWrite = document.getElementById("latestTime");
 const createButton = document.getElementById("createButton");
 const strokeButton = document.getElementById("strokeButton");
-
 
 
 init();
