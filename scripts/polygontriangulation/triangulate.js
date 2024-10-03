@@ -8,6 +8,12 @@ import { earClip } from "./earclipping.js";
 /* ---------------------- Init ----------------------------- */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+// fit canvas to size
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+
+
 var shape = getStar();
 drawPolygon(shape);
 
@@ -26,22 +32,20 @@ function addFunctionButtonEvents() {
 }
 
 function makeFunctionButtonHandler(method) {
-    function buttonHandler(e) {
+    return function(e) {
         var clipped = method(shape);
         for (let i = 0; i < clipped.length; i++) {
             drawPolygon(clipped[i]);
         }
     }
-    return buttonHandler;
 }
 
 function makeShapeButtonHandler(shapeFunction) {
-    function buttonHandler(e) {
+    return function(e) {
         shape = shapeFunction();
         clear();
         drawPolygon(shape);
     }
-    return buttonHandler;
 }
 
 /* ----------------------  Triangulation Code -------------- */
