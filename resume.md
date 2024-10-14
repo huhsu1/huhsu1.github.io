@@ -29,29 +29,21 @@ CS GPA: 3.875 <br>
 Overall GPA: 3.615 <br>
 <b>Relevant Coursework</b> <br>
 Machine Structures, AI, Computer Architecture & Engineering, Computer Security, Intro to CS Theory,
-Principles and Techniques for Data Science, Programing for Math, Intro to Software Engineering
+Principles and Techniques for Data Science, Programing for Math, Intro to Software Engineering <br>
+Two year break from Korean Mandatory Military Service
 </div>
 </p>
 </div>
 <hr>
 
 <div id="experiences">
-
-<h3> Experiences </h3>
-<div class="sub-title">
-Military Service | Republic of Korea Army <span> Dec 2021 – Jun 2023 </span> </div>
-<div class="sub-para">
-Worked as signalman in a mechanized infantry battalion doing clerical work for the signal platoon
-<br>
-Automated data analysis to provide insights for commander during a 6-week ROK-US joint exercise
-</div>
-
-<div class="sub-title">
-Software Developer Internship | Amazon <span> May 2020 – Aug 2020 </span> </div>
+<h3> Experiences </h3><div class="sub-title">
+Software Developer Intern | Amazon <span> May 2020 – Aug 2020 </span> </div>
 <div class="sub-para">
 Fixed a bug in automated job system that prevented hosts from returning to production <br>
-Automated recovery attempt to failed nodes <br>
-Returned $12.5m worth of hosts to production during the summer 
+Furthermore, automated recovery attempt to failed nodes <br>
+Returned $12.5m worth of hosts to production during the summer <br>
+Utilized Ruby on Rails and SQL
 </div>
 
 <div class="sub-title">
@@ -94,7 +86,7 @@ Dental Implant Image Recognition with Machine Learning using PyTorch
 Created a dataset class that parses xlsx file to import the image paths and the classifications<br>
 Used Inception_v3 model to train the data saving the state with best validation accuracy<br>
 Has 93% validation accuracy on 42 Korean Implant models <br>
-Put the model online using onnxruntime on my website
+Client sided inference on my website using onnxruntime
 </div>
 
 </div>

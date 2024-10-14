@@ -9,19 +9,77 @@ canvas {
 li {
     display: inline;
 }
+<!-- Slider aesthetic https://www.w3schools.com/howto/howto_js_rangeslider.asp -->
+.slidecontainer {
+    width: 100%;
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+.slider:hover {
+  opacity: 1;
+}
+	
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #AA0000;
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #AA0000;
+  cursor: pointer;
+}
+
+
+button {
+    cursor: pointer;
+    outline: 0;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #AA0000;
+    border-color: #AA0000;
+}
+                
+
+
+
 </style>
 
 <p>
 Looking into Polygon Triangulation Methods for paper marbling.<br>
-Will add more soon
 </p>
+<p id="results"></p>
 <ul id="shape buttons">
     <li><button id="star">Star</button></li>
+    <li><button id="heart">Heart</button></li>
 </ul>
 <ul id="function buttons">
     <li><button id="earclip">EarClip</button></li>
-
+    <li><button id="monotone">Monotone</button></li>
 </ul>
+<div class="slidecontainer">
+    <input type="range" min="1" max="2000" value="1" class="slider" id="range">
+</div>
 
 
 <canvas id="canvas" width="1000" height="1000"></canvas>

@@ -30,4 +30,15 @@ class Point {
     }
 }
 
-export { Point };
+function crossProduct(prev, curr, next) {
+    // expect all three to be Points
+    // cross curr to prev with curr to next
+    // see that when visualized? the picture is upside down
+    // This is the reason for prev being p2, and next being p1
+    var p2 = prev.subtract(curr);
+    var p1 = next.subtract(curr);
+
+    return (p1.x*p2.y) - (p1.y*p2.x);
+}
+
+export { Point, crossProduct };
