@@ -22,6 +22,7 @@ function earClip(vertices) {
     var index = 0;
     while (vertices.length > 3) {
         var n = vertices.length;
+        index %= n;
         if (isEar(index, vertices)) {
             triangles.push([  vertices[(index - 1 + n) % n],
                                 vertices[index],
@@ -31,7 +32,6 @@ function earClip(vertices) {
         } else {
             index++;
         }
-        index %= n;
     }
     triangles.push(vertices);
     return triangles;

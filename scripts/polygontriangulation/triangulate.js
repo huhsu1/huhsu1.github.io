@@ -5,6 +5,7 @@ Script to run to triangulate
 import { Point } from "./geometry.js";
 import { earClip } from "./earclipping.js";
 import { monotone } from "./monotone.js";
+import { earClipGPU } from "./earclipGPU.js";
 
 /* ---------------------- Init ----------------------------- */
 const canvas = document.getElementById("canvas");
@@ -40,10 +41,27 @@ function addShapeButtonEvents() {
 }
 
 function addFunctionButtonEvents() {
-    var earClipButton = document.getElementById("earclip");
-    earClipButton.addEventListener("click", makeFunctionButtonHandler(earClip));
-    var earClipButton = document.getElementById("monotone");
-    earClipButton.addEventListener("click", makeFunctionButtonHandler(monotone));
+    var button = document.getElementById("earclip");
+    button.addEventListener("click", makeFunctionButtonHandler(earClip));
+    button = document.getElementById("earclipgpu");
+    button.addEventListener("click", makeAsyncFunctionButtonHandler(earClipGPU));
+    button = document.getElementById("monotone");
+    button.addEventListener("click", makeFunctionButtonHandler(monotone));
+}
+
+function makeAsyncFunctionButtonHandler(method) {
+    return async function(e) {
+        clearAndDraw(shape);
+
+        var start = Date.now()
+        var clipped = await method(shape);
+        var duration = Date.now() - start;
+
+        for (let i = 0; i < clipped.length; i++) {
+            drawPolygon(clipped[i]);
+        }
+        addResultText(clipped, duration);
+    }
 }
 
 function makeFunctionButtonHandler(method) {
