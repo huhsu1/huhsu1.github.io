@@ -68,8 +68,8 @@ button {
 <p>
 Looking into Polygon Triangulation Methods for paper marbling.<br>
 Note WebGPU only works on Chrome at the moment.<br>
-Currently GPU one is really slow. I thought not touching vertices buffer would be best to not
-update such a big buffer every pass. I'll look into this more. <br>
+Currently GPU one is really slow. Used gpu to check if any other vertices are in the
+triangle. I'll look into it more.<br>
 To compare the times for 2800-gon for both star and heart, <br>
 EarClip takes ~100ms, monotone ~1-2ms, EarClipGPU takes 8829ms
 
